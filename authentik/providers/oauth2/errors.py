@@ -183,7 +183,8 @@ class AuthorizeError(OAuth2Error):
         )
 
         # Add state if present.
-        uri = uri + (f"&state={self.state}" if self.state else "")
+        if self.state:
+            uri = uri + f"&state={self.state}"
 
         return uri
 

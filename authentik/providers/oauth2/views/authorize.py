@@ -115,7 +115,6 @@ class OAuthAuthorizationParams:
         # Because in this endpoint we handle both GET
         # and POST request.
         query_dict = request.POST if request.method == "POST" else request.GET
-        state = query_dict.get("state")
         redirect_uri = query_dict.get("redirect_uri", "")
 
         response_type = query_dict.get("response_type", "")
@@ -132,7 +131,7 @@ class OAuthAuthorizationParams:
             response_mode=response_mode,
             grant_type="",
             scope=set(query_dict.get("scope", "").split()),
-            state=state,
+            state=query_dict.get("state"),
             nonce=query_dict.get("nonce"),
             prompt=ALLOWED_PROMPT_PARAMS.intersection(set(query_dict.get("prompt", "").split())),
             request=query_dict.get("request", None),
@@ -568,7 +567,8 @@ class OAuthFulfillmentStage(StageView):
                 query_fragment = {}
                 if self.params.grant_type in [GrantTypes.AUTHORIZATION_CODE]:
                     query_fragment["code"] = code.code
-                    query_fragment["state"] = [str(self.params.state) if self.params.state else ""]
+                    if self.params.state:
+                        query_fragment["state"] = str(self.params.state)
                 else:
                     query_fragment = self.create_implicit_response(code)
 
