@@ -248,7 +248,7 @@ class TestAuthorize(OAuthTestCase):
                 "client_id": "test",
                 "redirect_uri": "http://local.invalid/Foo",
                 "scope": "openid",
-                "state": "foo",
+                "state": "foo&naughty=1",
                 "nonce": generate_id(),
             },
         )
@@ -264,7 +264,7 @@ class TestAuthorize(OAuthTestCase):
                     "response_type": "id_token",
                     "client_id": "test",
                     "redirect_uri": "http://local.invalid/Foo",
-                    "state": "foo",
+                    "state": "foo&naughty=1",
                 },
             )
             self.assertEqual(
@@ -278,7 +278,7 @@ class TestAuthorize(OAuthTestCase):
                 "client_id": "test",
                 "redirect_uri": "http://local.invalid/Foo",
                 "scope": "openid",
-                "state": "foo",
+                "state": "foo&naughty=2",
             },
         )
         self.assertEqual(
@@ -306,7 +306,7 @@ class TestAuthorize(OAuthTestCase):
             access_code_validity="seconds=100",
         )
         Application.objects.create(name="app", slug="app", provider=provider)
-        state = generate_id()
+        state = "bar&naughty=3"
         user = create_test_admin_user()
         self.client.force_login(user)
         # Step 1, initiate params and get redirect to flow
@@ -363,7 +363,7 @@ class TestAuthorize(OAuthTestCase):
             )
         )
         Application.objects.create(name=generate_id(), slug=generate_id(), provider=provider)
-        state = generate_id()
+        state = "bar&naughty=4"
         user = create_test_admin_user()
         self.client.force_login(user)
         with patch(
@@ -426,7 +426,7 @@ class TestAuthorize(OAuthTestCase):
             signing_key=self.keypair,
         )
         Application.objects.create(name="app", slug="app", provider=provider)
-        state = generate_id()
+        state = "bar&naughty=5"
         user = create_test_admin_user()
         self.client.force_login(user)
         with patch(
@@ -491,7 +491,7 @@ class TestAuthorize(OAuthTestCase):
             )
         )
         app = Application.objects.create(name=generate_id(), slug=generate_id(), provider=provider)
-        state = generate_id()
+        state = "bar&naughty=6"
         user = create_test_admin_user()
         self.client.force_login(user)
         # Step 1, initiate params and get redirect to flow
@@ -541,7 +541,7 @@ class TestAuthorize(OAuthTestCase):
             signing_key=self.keypair,
         )
         app = Application.objects.create(name=generate_id(), slug=generate_id(), provider=provider)
-        state = generate_id()
+        state = "bar&naughty=7"
         user = create_test_admin_user()
         self.client.force_login(user)
         # Step 1, initiate params and get redirect to flow

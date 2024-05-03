@@ -35,7 +35,7 @@ class TestTokenPKCE(OAuthTestCase):
             access_code_validity="seconds=100",
         )
         Application.objects.create(name="app", slug="app", provider=provider)
-        state = generate_id()
+        state = "lala&naughty=1"
         user = create_test_admin_user()
         self.client.force_login(user)
         challenge = generate_id()
@@ -99,7 +99,7 @@ class TestTokenPKCE(OAuthTestCase):
             access_code_validity="seconds=100",
         )
         Application.objects.create(name="app", slug="app", provider=provider)
-        state = generate_id()
+        state = "lala&naughty=2"
         user = create_test_admin_user()
         self.client.force_login(user)
         header = b64encode(f"{provider.client_id}:{provider.client_secret}".encode()).decode()
@@ -161,7 +161,7 @@ class TestTokenPKCE(OAuthTestCase):
             access_code_validity="seconds=100",
         )
         Application.objects.create(name="app", slug="app", provider=provider)
-        state = generate_id()
+        state = "lala&naughty=3"
         user = create_test_admin_user()
         self.client.force_login(user)
         verifier = generate_id()
@@ -218,7 +218,7 @@ class TestTokenPKCE(OAuthTestCase):
             access_code_validity="seconds=100",
         )
         Application.objects.create(name="app", slug="app", provider=provider)
-        state = generate_id()
+        state = "lala&naughty=4"
         user = create_test_admin_user()
         self.client.force_login(user)
         verifier = generate_id()
