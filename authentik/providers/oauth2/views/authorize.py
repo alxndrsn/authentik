@@ -559,7 +559,7 @@ class OAuthFulfillmentStage(StageView):
                 query_params = parse_qs(uri.query)
                 query_params["code"] = code.code
                 if self.params.state:
-                    query_params["state"] = [str(self.params.state)]
+                    query_params["state"] = str(self.params.state)
 
                 uri = uri._replace(query=urlencode(query_params, doseq=True))
                 return urlunsplit(uri)
