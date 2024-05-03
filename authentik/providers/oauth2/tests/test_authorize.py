@@ -248,7 +248,6 @@ class TestAuthorize(OAuthTestCase):
                 "client_id": "test",
                 "redirect_uri": "http://local.invalid/Foo",
                 "scope": "openid",
-                "state": "foo&naughty=1",
                 "nonce": generate_id(),
             },
         )
@@ -264,7 +263,6 @@ class TestAuthorize(OAuthTestCase):
                     "response_type": "id_token",
                     "client_id": "test",
                     "redirect_uri": "http://local.invalid/Foo",
-                    "state": "foo&naughty=1",
                 },
             )
             self.assertEqual(
@@ -278,7 +276,6 @@ class TestAuthorize(OAuthTestCase):
                 "client_id": "test",
                 "redirect_uri": "http://local.invalid/Foo",
                 "scope": "openid",
-                "state": "foo&naughty=2",
             },
         )
         self.assertEqual(
@@ -306,7 +303,6 @@ class TestAuthorize(OAuthTestCase):
             access_code_validity="seconds=100",
         )
         Application.objects.create(name="app", slug="app", provider=provider)
-        state = "bar&naughty=3"
         user = create_test_admin_user()
         self.client.force_login(user)
         # Step 1, initiate params and get redirect to flow
@@ -315,7 +311,6 @@ class TestAuthorize(OAuthTestCase):
             data={
                 "response_type": "code",
                 "client_id": "test",
-                "state": state,
                 "redirect_uri": "foo://localhost",
             },
         )
@@ -328,7 +323,7 @@ class TestAuthorize(OAuthTestCase):
             {
                 "component": "xak-flow-redirect",
                 "type": ChallengeTypes.REDIRECT.value,
-                "to": f"foo://localhost?code={code.code}&state={state}",
+                "to": f"foo://localhost?code={code.code}",
             },
         )
         self.assertAlmostEqual(
@@ -363,7 +358,6 @@ class TestAuthorize(OAuthTestCase):
             )
         )
         Application.objects.create(name=generate_id(), slug=generate_id(), provider=provider)
-        state = "bar&naughty=4"
         user = create_test_admin_user()
         self.client.force_login(user)
         with patch(
@@ -382,7 +376,6 @@ class TestAuthorize(OAuthTestCase):
                 data={
                     "response_type": "id_token",
                     "client_id": "test",
-                    "state": state,
                     "scope": "openid test",
                     "redirect_uri": "http://localhost",
                     "nonce": generate_id(),
@@ -402,7 +395,7 @@ class TestAuthorize(OAuthTestCase):
                         f"http://localhost#access_token={token.token}"
                         f"&id_token={provider.encode(token.id_token.to_dict())}"
                         f"&token_type={TOKEN_TYPE}"
-                        f"&expires_in={int(expires)}&state={state}"
+                        f"&expires_in={int(expires)}"
                     ),
                 },
             )
@@ -426,7 +419,6 @@ class TestAuthorize(OAuthTestCase):
             signing_key=self.keypair,
         )
         Application.objects.create(name="app", slug="app", provider=provider)
-        state = "bar&naughty=5"
         user = create_test_admin_user()
         self.client.force_login(user)
         with patch(
@@ -446,7 +438,6 @@ class TestAuthorize(OAuthTestCase):
                     "response_type": "code",
                     "response_mode": "fragment",
                     "client_id": "test",
-                    "state": state,
                     "scope": "openid",
                     "redirect_uri": "http://localhost",
                     "nonce": generate_id(),
@@ -461,7 +452,7 @@ class TestAuthorize(OAuthTestCase):
                 {
                     "component": "xak-flow-redirect",
                     "type": ChallengeTypes.REDIRECT.value,
-                    "to": (f"http://localhost#code={code.code}" f"&state={state}"),
+                    "to": f"http://localhost#code={code.code}",
                 },
             )
             self.assertAlmostEqual(
@@ -491,7 +482,6 @@ class TestAuthorize(OAuthTestCase):
             )
         )
         app = Application.objects.create(name=generate_id(), slug=generate_id(), provider=provider)
-        state = "bar&naughty=6"
         user = create_test_admin_user()
         self.client.force_login(user)
         # Step 1, initiate params and get redirect to flow
@@ -501,7 +491,6 @@ class TestAuthorize(OAuthTestCase):
                 "response_type": "id_token",
                 "response_mode": "form_post",
                 "client_id": provider.client_id,
-                "state": state,
                 "scope": "openid",
                 "redirect_uri": "http://localhost",
                 "nonce": generate_id(),
@@ -524,7 +513,6 @@ class TestAuthorize(OAuthTestCase):
                     "id_token": provider.encode(token.id_token.to_dict()),
                     "token_type": TOKEN_TYPE,
                     "expires_in": "3600",
-                    "state": state,
                 },
             },
         )
@@ -541,7 +529,6 @@ class TestAuthorize(OAuthTestCase):
             signing_key=self.keypair,
         )
         app = Application.objects.create(name=generate_id(), slug=generate_id(), provider=provider)
-        state = "bar&naughty=7"
         user = create_test_admin_user()
         self.client.force_login(user)
         # Step 1, initiate params and get redirect to flow
@@ -551,7 +538,6 @@ class TestAuthorize(OAuthTestCase):
                 "response_type": "code",
                 "response_mode": "form_post",
                 "client_id": provider.client_id,
-                "state": state,
                 "scope": "openid",
                 "redirect_uri": "http://localhost",
             },
@@ -569,7 +555,6 @@ class TestAuthorize(OAuthTestCase):
                 "title": f"Redirecting to {app.name}...",
                 "attrs": {
                     "code": code.code,
-                    "state": state,
                 },
             },
         )

@@ -35,7 +35,6 @@ class TestTokenPKCE(OAuthTestCase):
             access_code_validity="seconds=100",
         )
         Application.objects.create(name="app", slug="app", provider=provider)
-        state = "lala&naughty=1"
         user = create_test_admin_user()
         self.client.force_login(user)
         challenge = generate_id()
@@ -46,7 +45,6 @@ class TestTokenPKCE(OAuthTestCase):
             data={
                 "response_type": "code",
                 "client_id": "test",
-                "state": state,
                 "redirect_uri": "foo://localhost",
                 "code_challenge": challenge,
                 "code_challenge_method": "S256",
@@ -61,7 +59,7 @@ class TestTokenPKCE(OAuthTestCase):
             {
                 "component": "xak-flow-redirect",
                 "type": ChallengeTypes.REDIRECT.value,
-                "to": f"foo://localhost?code={code.code}&state={state}",
+                "to": f"foo://localhost?code={code.code}",
             },
         )
         response = self.client.post(
@@ -99,7 +97,6 @@ class TestTokenPKCE(OAuthTestCase):
             access_code_validity="seconds=100",
         )
         Application.objects.create(name="app", slug="app", provider=provider)
-        state = "lala&naughty=2"
         user = create_test_admin_user()
         self.client.force_login(user)
         header = b64encode(f"{provider.client_id}:{provider.client_secret}".encode()).decode()
@@ -109,7 +106,6 @@ class TestTokenPKCE(OAuthTestCase):
             data={
                 "response_type": "code",
                 "client_id": "test",
-                "state": state,
                 "redirect_uri": "foo://localhost",
                 # "code_challenge": challenge,
                 # "code_challenge_method": "S256",
@@ -124,7 +120,7 @@ class TestTokenPKCE(OAuthTestCase):
             {
                 "component": "xak-flow-redirect",
                 "type": ChallengeTypes.REDIRECT.value,
-                "to": f"foo://localhost?code={code.code}&state={state}",
+                "to": f"foo://localhost?code={code.code}",
             },
         )
         response = self.client.post(
@@ -161,7 +157,6 @@ class TestTokenPKCE(OAuthTestCase):
             access_code_validity="seconds=100",
         )
         Application.objects.create(name="app", slug="app", provider=provider)
-        state = "lala&naughty=3"
         user = create_test_admin_user()
         self.client.force_login(user)
         verifier = generate_id()
@@ -177,7 +172,6 @@ class TestTokenPKCE(OAuthTestCase):
             data={
                 "response_type": "code",
                 "client_id": "test",
-                "state": state,
                 "redirect_uri": "foo://localhost",
                 "code_challenge": challenge,
                 "code_challenge_method": "S256",
@@ -192,7 +186,7 @@ class TestTokenPKCE(OAuthTestCase):
             {
                 "component": "xak-flow-redirect",
                 "type": ChallengeTypes.REDIRECT.value,
-                "to": f"foo://localhost?code={code.code}&state={state}",
+                "to": f"foo://localhost?code={code.code}",
             },
         )
         response = self.client.post(
@@ -218,7 +212,6 @@ class TestTokenPKCE(OAuthTestCase):
             access_code_validity="seconds=100",
         )
         Application.objects.create(name="app", slug="app", provider=provider)
-        state = "lala&naughty=4"
         user = create_test_admin_user()
         self.client.force_login(user)
         verifier = generate_id()
@@ -229,7 +222,6 @@ class TestTokenPKCE(OAuthTestCase):
             data={
                 "response_type": "code",
                 "client_id": "test",
-                "state": state,
                 "redirect_uri": "foo://localhost",
                 "code_challenge": verifier,
             },
@@ -243,7 +235,7 @@ class TestTokenPKCE(OAuthTestCase):
             {
                 "component": "xak-flow-redirect",
                 "type": ChallengeTypes.REDIRECT.value,
-                "to": f"foo://localhost?code={code.code}&state={state}",
+                "to": f"foo://localhost?code={code.code}",
             },
         )
         response = self.client.post(
