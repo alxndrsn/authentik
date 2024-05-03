@@ -3,14 +3,7 @@ name: authentik-ci-outpost
 
 on:
   push:
-    branches:
-      - main
-      - next
-      - version-*
   pull_request:
-    branches:
-      - main
-      - version-*
   workflow_dispatch:
 
 jobs:
