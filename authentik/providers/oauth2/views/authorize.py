@@ -88,7 +88,7 @@ class OAuthAuthorizationParams:
     response_type: str
     response_mode: str | None
     scope: set[str]
-    state: str
+    state: str | None
     nonce: str | None
     prompt: set[str]
     grant_type: str
